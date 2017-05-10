@@ -3,12 +3,12 @@
 //ViewModel constructor with locations observableArray
 //instantiate the ViewModel using the new operator
 //apply binding AKA activate K.O.
-//var googleKey=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE;
+//var googleKey=APIKEY;
 lovedOnes=[
 {
 	name: "Ken&Marita",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=APIKEY",
 	nicknames: ["Home"],
 	hours: "Mon-Tue: 5pm-8am Wed-Fri: 24X7 Sat-Sun: 24X7",
 	building: "1"
@@ -16,35 +16,35 @@ lovedOnes=[
 },{
 	name:"Pat&Carmela",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=APIKEY",
 	nicknames: ["In-Laws"],
 	hours: "Mon-Sun: 24X7",
 	building: "2"
 },{
 	name: "Eureka Payments",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=APIKEY",
 	nicknames: ["Ken's Work"],
 	hours: "Mon-Fri:  8am -5pm",
 	building: "3"
 },{
 	name: "Eureka High School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=APIKEY",
 	nicknames: ["Elliott's School"],
 	hours: "Mon-Fri: 8am-3pm",
 	building: "4"
 },{
 	name: "Cutten School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=APIKEY",
 	nicknames: ["Marita's Work"],
 	hours: "Mon-Tue: 7:30am-4:00 pm",
 	building: "5"
 },{
 	name: "Eureka Police Dep",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=APIKEY",
 	nicknames: ["Law Enforcement"],
 	hours: "N/A",
 	building: "6"
