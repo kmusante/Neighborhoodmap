@@ -1,63 +1,32 @@
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
  <head>
- <!-- may want to move to css file -->
+   <meta charset="UTF-8">
+   <title>Neighborhood Map</title>
    <style type="text/css">
-     html, body { height: 100%; margin: 0; padding: 0; }
+     html, body { height: 100%; margin: 10; padding: 10; }
      #ekaMap { height: 100%; }
    </style>
  </head>
  <body>
+   <ul data-bind="foreach: careList">
+        <li data-bind="text: name, click: $parent.lovedOne"></li>
+    </ul>
+    <div data-bind="with:selectedOne">
+        <h2 data-bind="text: nicknames"></h2>
+        <h3>Days+Hours likely to be at location:</h3>
+        <p data-bind="text: hours"></p>
+        <img src="" alt="google image of location described in name" data-bind="attr: {src: imgSrc}">
+
+
+    </div>-->
    <!-- Create map in HTML called ekaMap-->
    <div id="ekaMap"></div>
-   <script>
-     var ekaMap;
-     // initialize the map
-     function initMap() {
-       // TODO: use a constructor to create a new map JS object. You can use the coordinates
-       ekaMap=new google.maps.Map(document.getElementById('ekaMap'),{
-       	center: {lat: 40.802222, lng: -124.1625},
-       	zoom: 12,
-        mapTypeControl: false
-       });
-       
-       var locations = [
-          {title: 'Ken&Marita', location: {lat: 40.763027, lng: -124.151345}},
-          {title: 'Pat&Carmela', location: {lat: 40.79292, lng: -124.142186}},
-          {title: 'Eureka Payments', location: {lat: 40.802028, lng: -124.161238}},
-          {title: 'Eureka High School', location: {lat: 40.790379, lng: -124.158875}},
-          {title: 'Cutten School', location: {lat: 40.766483, lng: -124.143925}},
-          {title: 'Eureka Police Dep', location: {lat: 40.800425, lng: -124.169326}}
-        ];
-
-        for (var i = 0; i < locations.length; i++) {
-          // Get the position from the location array.
-          var position = locations[i].location;
-          var title = locations[i].title;
-          // Create a marker per location, and put into markers array.
-          var marker = new google.maps.Marker({
-            map: ekaMap,
-            position: position,
-            title: title,
-            animation: google.maps.Animation.DROP,
-            //icon: defaultIcon,
-            id: i
-          });
-        }
-       
-       
-       var kenHouseInfoWindow=new google.maps.InfoWindow({
-       	content: "Mon-Tue:  After 3 pm<br>Wed-Friday:  All Day<br>Sat&Sun: Unk"
-       });
-       
-       kenMarker.addListener('click', function(){
-       	kenHouseInfoWindow.open(ekaMap, kenMarker);
-       });
-     }
-   </script>
-   <!--TODO: Load the JS API ASYNCHRONOUSLY allows it to load faster below.-->
+     <script src="js/lib/knockout-3.2.0.js"></script>
+     <script src="js/app.js"></script>
+   <!-- Load the JS API ASYNCHRONOUSLY allows it to load faster below.-->
    <script
-   	src="https://maps.googleapis.com/maps/api/js?key=XXXXX=3&callback=initMap"
+   	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE&v=3&callback=initMap"
    	async defer>
    	</script>
  </body>
