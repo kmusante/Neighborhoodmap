@@ -3,12 +3,12 @@
 //ViewModel constructor with locations observableArray
 //instantiate the ViewModel using the new operator
 //apply binding AKA activate K.O.
-//var googleKey=APIKEY;
+//var googleKey=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE;
 lovedOnes=[
 {
 	name: "Ken&Marita",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Home"],
 	hours: "Mon-Tue: 5pm-8am Wed-Fri: 24X7 Sat-Sun: 24X7",
 	building: "1"
@@ -16,35 +16,35 @@ lovedOnes=[
 },{
 	name:"Pat&Carmela",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["In-Laws"],
 	hours: "Mon-Sun: 24X7",
 	building: "2"
 },{
 	name: "Eureka Payments",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Ken's Work"],
 	hours: "Mon-Fri:  8am -5pm",
 	building: "3"
 },{
 	name: "Eureka High School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Elliott's School"],
 	hours: "Mon-Fri: 8am-3pm",
 	building: "4"
 },{
 	name: "Cutten School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Marita's Work"],
 	hours: "Mon-Tue: 7:30am-4:00 pm",
 	building: "5"
 },{
 	name: "Eureka Police Dep",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Law Enforcement"],
 	hours: "N/A",
 	building: "6"
@@ -85,8 +85,7 @@ var ekaMap;
             icon: defaultPin,
             animation: google.maps.Animation.DROP,
             id: i
-
-          });
+          });attachInfoWindow(marker, lovedOnes[marker.id].building);
           //higlights Pin when moused-over
           marker.addListener('mouseover', function() {
             this.setIcon(highlightPin);
@@ -95,16 +94,16 @@ var ekaMap;
           marker.addListener('mouseout', function() {
             this.setIcon(defaultPin);
           });
-          //create window to be opened by each Pin
-          //NEED HELP GETTING this right
-          var pinInfoWindow = 
-          	new google.maps.InfoWindow
-          	({content: lovedOnes[marker.id].building});
-          //allows for info to be open when pin clicked
-          marker.addListener('click', function() {
-            pinInfoWindow.open(ekaMap, this);
-          });
-        }
+      	}
+      //create function so info window may be opened at each Pin
+      function attachInfoWindow(marker, building) {
+        var infowindow = new google.maps.InfoWindow({
+          content: building
+        });
+        marker.addListener('click', function() {
+          infowindow.open(marker.get('ekaMap'), marker);
+        });
+      }
       // This function takes in a COLOR, and then creates a new marker
       // icon of that color. The icon will be 21 px wide by 34 high, 
       //have an origin of 0, 0 and be anchored at 10, 34)
