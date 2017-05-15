@@ -1,14 +1,9 @@
-//locations array of location objects
-//maybe Location constructor(like Cat constructor)......karol likes but optional
-//ViewModel constructor with locations observableArray
-//instantiate the ViewModel using the new operator
-//apply binding AKA activate K.O.
-//var googleKey=APIKEY;
+//lovedOnes are variables for key locations to knonw in event of earthquake
 lovedOnes=[
 {
 	name: "Ken&Marita",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=APIKey",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Home"],
 	hours: "Mon-Tue: 5pm-8am Wed-Fri: 24X7 Sat-Sun: 24X7",
 	building: "1"
@@ -16,39 +11,42 @@ lovedOnes=[
 },{
 	name:"Pat&Carmela",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=APIKey",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["In-Laws"],
 	hours: "Mon-Sun: 24X7",
 	building: "2"
 },{
 	name: "Eureka Payments",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=APIKey",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Ken's Work"],
 	hours: "Mon-Fri:  8am -5pm",
 	building: "3"
 },{
 	name: "Eureka High School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=APIKey",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Elliott's School"],
 	hours: "Mon-Fri: 8am-3pm",
 	building: "4"
 },{
 	name: "Cutten School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=APIKey",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Marita's Work"],
 	hours: "Mon-Tue: 7:30am-4:00 pm",
 	building: "5"
 },{
 	name: "Eureka Police Dep",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=APIKey",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Law Enforcement"],
 	hours: "N/A",
 	building: "6"
 }];
+//json for all equakes for past 30 days
+var equakeUrl= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
+var distance;
 
 var ekaMap;
      // initialize the map
@@ -131,9 +129,78 @@ var pinDrop=function(data) {
 	this.building=ko.observable(data.building);
 	
 };
+
+//how to calc distance.  From stack overflow
+function getDistanceFromLatLon(latitude, longitude) {
+  	var R = 3959; // Radius of the earth in miles
+  	var dLat = deg2rad(latitude-40.802222);  // deg2rad below
+  	var dLon = deg2rad(longitude-(-124.1625)); 
+  	var a = 
+    	Math.sin(dLat/2) * Math.sin(dLat/2) +
+    	Math.cos(deg2rad(40.802222)) * Math.cos(deg2rad(latitude)) * 
+    	Math.sin(dLon/2) * Math.sin(dLon/2); 
+  	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  	distance = R * c; // Distance in mi
+  	distance=distance.toFixed(2);
+  	return distance;
+}
+//this is also from stack overflow&needed to activate
+//getDistanceFromLatLon function
+function deg2rad(deg) {
+	return deg * (Math.PI/180)
+}
+
+//inspired by stack overflow
+var earthquake=function() {
+	var earthquake="shaker";
+	console.log(earthquake);
+	//go through each item on url
+	$.getJSON(equakeUrl, function(data) {
+	    var output = "";
+	    //go through each item in equakeURL
+	    $.each(data, function(key, val) {
+	        var features = data.features;
+	        features.forEach(function(feature) {
+	            //how to calc distance.  From stack overflow
+	            var longitude=feature.geometry.coordinates[0];
+	            var latitude=feature.geometry.coordinates[1];
+	            getDistanceFromLatLon(latitude, longitude);
+	            //only select if within 50 mi & greater than 2.5
+	            if (distance<=50 && feature.properties.mag>=2.5) {
+    				console.log(feature.properties.place);
+    				console.log(distance,"mi");
+    				var quakeTitle=(feature.properties.mag);
+    				console.log(quakeTitle);
+    				var quakePosition = {lat: latitude, lng: longitude};
+          			ekaMap.setZoom(8);
+          			//makes quake circle.  Size relative to magnitude
+    				var quakeMarker = new google.maps.Circle({
+			            strokeColor: '#FF0000',
+            			strokeWeight: 2,
+            			fillColor: 'green',
+            			map: ekaMap,
+            			center: quakePosition,
+            			radius: quakeTitle*10000/7,
+            			strokeOpacity: 0.1
+			          });attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
+    					}
+    			//event listener.  Will indicate quake magnitude 
+    			function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
+        			var quakeInfowindow = new google.maps.InfoWindow({
+          			content: "magnitude "+quakeTitle.toString(),
+          			position: quakePosition
+        			});quakeMarker.addListener('click', function() {
+          				quakeInfowindow.open(ekaMap, quakeMarker);
+        				});
+			     	}
+					})
+	            });
+
+	            });
+	};
 	
 //viewModel inspired by KO tutorials and class lecture
-function viewModel() {
+function ViewModel() {
 	var self = this;
     self.folders = lovedOnes;
 	self.careList=ko.observableArray([]);
@@ -147,7 +214,11 @@ function viewModel() {
 	self.lovedOne=function(clickedOne) {
 		self.selectedOne(clickedOne);
 	};
+	//call earthquake function
+	self.earthquakes = function() {
+        earthquake();
+        }
 };
 
-//apply bindings to viewModel
-ko.applyBindings(new viewModel());
+//apply bindings to ViewModel
+ko.applyBindings(new ViewModel());
