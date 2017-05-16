@@ -3,42 +3,42 @@ lovedOnes=[
 {
 	name: "Ken&Marita",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=APIKEY",
 	nicknames: ["Home"],
 	hours: "Mon-Tue: 5pm-8am Wed-Fri: 24X7 Sat-Sun: 24X7",
 	building: "Ken&Marita House<br/>Built: 2008<br/>Foundation Type: Perimeter<br/>Largest Quake: 6.5"
 },{
 	name:"Pat&Carmela",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=APIKEY",
 	nicknames: ["In-Laws"],
 	hours: "Mon-Sun: 24X7",
 	building: "Pat&Carmela House<br/>Built: 1904<br/>Foundation Type: Pillar&Post<br/>Largest Quake: 7.3"
 },{
 	name: "Eureka Payments",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=APIKEY",
 	nicknames: ["Ken's Work"],
 	hours: "Mon-Fri:  8am -5pm",
 	building: "Eureka Payments<br/>Built: 1987<br/>Foundation Type: Slab<br/>Largest Quake: 7.2"
 },{
 	name: "Eureka High School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=APIKEY",
 	nicknames: ["Elliott's School"],
 	hours: "Mon-Fri: 8am-3pm",
 	building: "EHS<br/>Built: 1925<br/>Foundation Type: Perimeter<br/>Largest Quake: 7.2"
 },{
 	name: "Cutten School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=APIKEY",
 	nicknames: ["Marita's Work"],
 	hours: "Mon-Tue: 7:30am-4:00 pm",
 	building: "Cutten School<br/>Built: 1979<br/>Foundation Type: Portables<br/>Largest Quake: 7.2"
 },{
 	name: "Eureka Police Dep",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=APIKEY",
 	nicknames: ["Law Enforcement"],
 	hours: "N/A",
 	building: "Eureka Police Department<br/>Rally Point"
