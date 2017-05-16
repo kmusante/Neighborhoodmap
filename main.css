@@ -49,6 +49,7 @@ main {
 
 #col-4 {
     width: 33.33%;
+    float: left;
 }
 
 #col-5 {

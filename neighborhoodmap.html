@@ -5,15 +5,14 @@
    <title>Neighborhood Map</title>
    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" type="text/css">
    <link rel="stylesheet" type="text/css" href="main.css">
-   <style type="text/css">
-     
-   </style>
+   <style type="text/css"></style>
  </head>
  <body>
   <div id="col-12">
-       <ul id="col-4" data-bind="foreach: careList">
+       <h3>Click on the name for the corresonding hours and image of the building</h3>
+       <h2><ul id="col-4" data-bind="foreach: careList">
             <li data-bind="text: name, click: $parent.lovedOne"></li>
-        </ul>
+        </ul></h2>
         <div id="col-4" data-bind="with:selectedOne">
             <h2 data-bind="text: nicknames"></h2>
             <h3>Days+Hours likely to be at location:</h3>
@@ -24,6 +23,7 @@
         </div>
 
   </div>
+   <h3>Select for Magnitude 2.5 or greater earthquakes over past 30 days within 50 mi radius</h3>
    <button data-bind="click: earthquakes">EarthQuake Update</button>
    <!-- Create map in HTML called ekaMap-->
    <div id="ekaMap"></div>
@@ -32,7 +32,7 @@
      <script src="js/app.js"></script>
    <!-- Load the JS API ASYNCHRONOUSLY allows it to load faster below.-->
    <script
-   	src="https://maps.googleapis.com/maps/api/js?key=APIKEY&v=3&callback=initMap"
+   	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE&v=3&callback=initMap"
    	async defer>
    	</script>
  </body>
