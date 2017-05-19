@@ -2,6 +2,7 @@
 <html lang="en">
  <head>
    <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1">
    <title>Neighborhood Map</title>
    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" type="text/css">
    <link rel="stylesheet" type="text/css" href="main.css">
@@ -25,6 +26,7 @@
   </div>
    <h3>Select for Magnitude 2.5 or greater earthquakes over past 30 days within 50 mi radius</h3>
    <button data-bind="click: earthquakes">EarthQuake Update</button>
+   <p>Source: https://earthquake.usgs.gov</p>
    <!-- Create map in HTML called ekaMap-->
    <div id="ekaMap"></div>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -32,8 +34,7 @@
      <script src="js/app.js"></script>
    <!-- Load the JS API ASYNCHRONOUSLY allows it to load faster below.-->
    <script
-   	src="https://maps.googleapis.com/maps/api/js?key=APIKEY&v=3&callback=initMap"
-   	async defer>
-   	</script>
+   	async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE&v=3&callback=initMap" onerror="mapError()">
+   </script>
  </body>
 </html>

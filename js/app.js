@@ -3,42 +3,42 @@ lovedOnes=[
 {
 	name: "Ken&Marita",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=65%20osprey%20ln,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Home"],
 	hours: "Mon-Tue: 5pm-8am Wed-Fri: 24X7 Sat-Sun: 24X7",
 	building: "Ken&Marita House<br/>Built: 2008<br/>Foundation Type: Perimeter<br/>Largest Quake: 6.5"
 },{
 	name:"Pat&Carmela",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=2340%2017th%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["In-Laws"],
 	hours: "Mon-Sun: 24X7",
 	building: "Pat&Carmela House<br/>Built: 1904<br/>Foundation Type: Pillar&Post<br/>Largest Quake: 7.3"
 },{
 	name: "Eureka Payments",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=515%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Ken's Work"],
 	hours: "Mon-Fri:  8am -5pm",
 	building: "Eureka Payments<br/>Built: 1987<br/>Foundation Type: Slab<br/>Largest Quake: 7.2"
 },{
 	name: "Eureka High School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=1916%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Elliott's School"],
 	hours: "Mon-Fri: 8am-3pm",
 	building: "EHS<br/>Built: 1925<br/>Foundation Type: Perimeter<br/>Largest Quake: 7.2"
 },{
 	name: "Cutten School",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=4182%20walnut%20dr,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Marita's Work"],
 	hours: "Mon-Tue: 7:30am-4:00 pm",
 	building: "Cutten School<br/>Built: 1979<br/>Foundation Type: Portables<br/>Largest Quake: 7.2"
 },{
 	name: "Eureka Police Dep",
 	imgSrc: 
-	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=APIKEY",
+	"https://maps.googleapis.com/maps/api/streetview?size=400x400&location=604%20c%20st,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
 	nicknames: ["Law Enforcement"],
 	hours: "N/A",
 	building: "Eureka Police Department<br/>Rally Point"
@@ -151,12 +151,19 @@ function deg2rad(deg) {
 
 //inspired by stack overflow
 var earthquake=function() {
-	var earthquake="shaker";
-	console.log(earthquake);
+  if (typeof(earthquake)===undefined || typeof(earthquake)===null) {
+    console.log("errorr!!!");
+    mapError();
+    };
+  try {
+    var equakeUrltest= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
+    };
+  catch(err) {
+    mapError();
+}
 	//go through each item on url
 	$.getJSON(equakeUrl, function(data) {
-	    var output = "";
-	    //go through each item in equakeURL
+      //go through each item in equakeURL
 	    $.each(data, function(key, val) {
 	        var features = data.features;
 	        features.forEach(function(feature) {
@@ -166,36 +173,26 @@ var earthquake=function() {
 	            getDistanceFromLatLon(latitude, longitude);
 	            //only select if within 50 mi & greater than 2.5
 	            if (distance<=50 && feature.properties.mag>=2.5) {
-    				console.log(feature.properties.place);
-    				console.log(distance,"mi");
-    				var quakeTitle=(feature.properties.mag);
-    				console.log(quakeTitle);
-    				var quakePosition = {lat: latitude, lng: longitude};
-          			ekaMap.setZoom(8);
-          	//makes quake circle.  Size relative to magnitude
-    				var quakeMarker = new google.maps.Circle({
-			            strokeColor: '#FF0000',
-            			strokeWeight: 2,
-            			fillColor: 'green',
-            			map: ekaMap,
-            			center: quakePosition,
-            			radius: quakeTitle*10000/7,
-                  draggable: true,
-                  animation: google.maps.Animation.DROP,
-            			strokeOpacity: 0.1
-			          });quakeMarker.addListener('mouseover', toggleBounce);
-                attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
+        				console.log(feature.properties.place);
+        				console.log(distance,"mi");
+        				var quakeTitle=(feature.properties.mag);
+        				console.log(quakeTitle);
+        				var quakePosition = {lat: latitude, lng: longitude};
+              			ekaMap.setZoom(9);
+              	//makes quake circle.  Size relative to magnitude
+        				var quakeMarker = new google.maps.Circle({
+    			            strokeColor: '#FF0000',
+                			strokeWeight: 2,
+                			fillColor: 'green',
+                			map: ekaMap,
+                			center: quakePosition,
+                			radius: quakeTitle*10000/7,
+                      draggable: true,
+                      animation: google.maps.Animation.DROP,
+                			strokeOpacity: 0.1
+    			          });attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
           }
-
-          function toggleBounce() {
-            if (quakeMarker.getAnimation() !== null) {
-            quakeMarker.setAnimation(null);
-            } else {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-            } 
-            }
-
-    			//event listener.  Will indicate quake magnitude 
+          //event listener.  Will indicate quake magnitude 
     			function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
         			var quakeInfowindow = new google.maps.InfoWindow({
           			content: "magnitude "+quakeTitle.toString(),
@@ -210,6 +207,10 @@ var earthquake=function() {
 	            });
 	};
 	
+//manages oneerror error
+function mapError() {
+  alert('The image could not be loaded.  For the love of God I hope it was not because of an earthquake');
+    };  
 //viewModel inspired by KO tutorials and class lecture
 function ViewModel() {
 	var self = this;

@@ -50,6 +50,7 @@ main {
 #col-4 {
     width: 33.33%;
     float: left;
+
 }
 
 #col-5 {
@@ -83,3 +84,15 @@ main {
 #col-12 {
     width: 100%;
 }
+
+@media screen and (max-width: 550px) {
+  
+  #col-4 {
+    width: 100%;
+  }
+  #col-12 {
+    width: 100%;
+}
+}
+
+
