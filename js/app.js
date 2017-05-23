@@ -49,10 +49,16 @@ var equakeUrl= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_mo
 var distance;
 //variable which provides magnitude of earthquake
 var quakeTitle;
-//variable which provides location of earthquake
-var shakerList;
-var quakePlace;
-var hotSpots=[{}];
+//var which provides the location relative to a city (not lat/lng)
+var quakeCity;
+//array lat and lng of earthquakes
+var quakePlace=[];
+//array created by concatinating quakePlace but not duplicating
+var quakeLocations=[];
+//array created to hold quakeLocations once concatenation complete
+var shakerList=[];
+//var created for ko observable array
+var hotSpots;
 
 var ekaMap;
   // initialize the map
@@ -139,9 +145,11 @@ var pinDrop=function(data) {
 };
 
 var rattleNRoll=function(data) {
-  var self = this;
-  this.quakeTitle=ko.observable(data.quakeTitle);
-  this.quakePlace=ko.observable(data.quakePlace);
+    var self = this;
+    var latitude, longitude;
+    self.shakerList=ko.observableArray(data.shakerList);
+    self.latitude = ko.observable(data.latitude);
+    self.longitude = ko.observable(data.longitude);
 };
 
 //how to calc distance.  From stack overflow
@@ -203,10 +211,11 @@ var earthquake=function() {
         //only select if within 50 mi & greater than 2.5 magnitude
         if (distance<=50 && feature.properties.mag>=2.5) {
   				quakeTitle=(feature.properties.mag);
-          quakePlace=(feature.properties.title);
+          quakeCity=(feature.properties.title);
+          
           //resets zoom to account for distance of equakes to eureka
           var quakePosition = {lat: latitude, lng: longitude};
-        			ekaMap.setZoom(9);
+        	ekaMap.setZoom(9);
           //makes quake circle.  Size relative to magnitude of equake
   				var quakeMarker = new google.maps.Circle({
             strokeColor: '#FF0000',
@@ -218,23 +227,45 @@ var earthquake=function() {
             draggable: true,
             animation: google.maps.Animation.DROP,
       			strokeOpacity: 0.1
-          });attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
-        }
-        //event listener.  Will indicate quake magnitude 
+            });attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
+            
+            //location in longitude and latitude
+            quakePlace=[quakePosition.lat, quakePosition.lng];
+            //arrange in an array and eliminate duplicates
+            quakeLocations=arrayUnique(quakeLocations.concat(quakePlace));
+            console.log(quakeLocations.length);
+            //console.log(quakeLocations, "****");
+          };
+           
+            //from stackoverflow to eliminate duplicates from json
+            function arrayUnique(array) {
+              var a = array.concat();
+              for(var i=0; i<a.length; ++i) {
+                for(var j=i+1; j<a.length; ++j) {
+                  if(a[i] === a[j])
+                    a.splice(j--, 1);
+                  }
+                }
+
+              return a;
+              }
+         
+       
+          //event listener.  Will indicate quake magnitude 
   			function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
     			var quakeInfowindow = new google.maps.InfoWindow({
-      			content: "magnitude "+quakeTitle.toString(),
+      			content: quakeCity+" -Magnitude "+quakeTitle.toString(),
       			position: quakePosition
     			});quakeMarker.addListener('click', function() {
               quakeInfowindow.open(ekaMap, quakeMarker);
     				});
 	     	 }
 			 })
-      });
+      });shakerList=quakeLocations;
+          console.log(shakerList);  
     });
-	};
-	
-//manages oneerror error
+    };
+	//manages oneerror error
 function mapError() {
   alert('The image could not be loaded.  For the love of God I hope it was not because of an earthquake');
     };  
@@ -257,8 +288,37 @@ function ViewModel() {
 		self.selectedOne(clickedOne);
 	};
 
+  self.earthquakes = function() {
+    earthquake();
+    rattleNRoll();
+    self.hotSpots = ko.observableArray([
+      new latitude(self.shakerList[0]),
+      new longitude(self.shakerList[1])
+    ]);
+    console.log(hotSpots, "**&&");
+    console.log(shakerList, "##&&");
+  };
+ 
+	/*self.earthquakes = function() {
+    earthquake();
+    self.hotSpots=ko.observableArray([]);
+    self.hotSpots.push( new rattleNRoll(shakerList));
+    console.log(hotSpots, "**&&");
+    console.log(shakerList, "##&&");
+    console.dir(hotSpots[0]);
+ 
+  };*/
 
-  self.shakerList=ko.observableArray([]);
+  //  self.shakerList.push(quakeTitle);
+  //self.shakerlist.push(quakePlace);
+  //console.log(quakeTitle, "**");
+  //console.log(shakerList, "##");
+  //console.log(quakePlace);
+  
+    //console.dir(shakerList);
+    //console.dir(quakePlace);
+    
+  /*
   self.folders=hotSpots[quakeTitle, quakePlace];
 
   hotSpots.forEach(function(quakeSpot){
@@ -270,25 +330,38 @@ function ViewModel() {
   self.rattled=function(shaken) {
     self.shaker(shaken);
   }
+  lovedOnes.forEach(function(locationItem){
+    self.careList.push( new pinDrop(locationItem));
+  });
+  
+  //creates observable for each location in list
+  self.selectedOne=ko.observable( this.careList()[0]);
 
-
-	self.earthquakes = function() {
-    earthquake();
+  //refers to specific pin drop location
+  self.lovedOne=function(clickedOne) {
+    self.selectedOne(clickedOne);
   };
-  //  self.shakerList.push(quakeTitle);
-  //self.shakerlist.push(quakePlace);
-  console.log(quakeTitle, "**");
-  console.log(shakerList, "##");
-  console.log(quakePlace);
-  console.log(hotSpots);
-    //console.dir(shakerList);
-    //console.dir(quakePlace);
-    
+
+  self.folders=shakerList;  
+  self.hotSpots=ko.observableArray([]);
+
+  shakerList.forEach(function(latLng) {
+    self.hotSpots.push( new rattleNRoll(latLng));
+  });
+
+  self.shakenOne=ko.observable( this.hotSpots());
+
+  self.hotSpot=function(clickedOn) {
+    self.shakenOne(clickon);
+  }
+  
+*/
 
 
   //self.shakerList.push(quakeTitle);
 
 };
+
 
 //apply bindings to ViewModel
 ko.applyBindings(new ViewModel());
