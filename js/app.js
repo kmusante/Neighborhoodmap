@@ -45,7 +45,14 @@ lovedOnes=[
 }];
 //json for all equakes for past 30 days
 var equakeUrl= "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
+//variable which provides distance in miles between quake and eureka
 var distance;
+//variable which provides magnitude of earthquake
+var quakeTitle;
+//variable which provides location of earthquake
+var shakerList;
+var quakePlace;
+var hotSpots=[{}];
 
 var ekaMap;
   // initialize the map
@@ -73,6 +80,7 @@ var ekaMap;
       //default pin color is red.  Mouse over color is yellow
       var defaultPin = makeMarkerIcon('FF0065');
       var highlightPin=makeMarkerIcon('FFFF30');
+      var bluePin=makeMarkerIcon('0065ff');
         
       // Create a marker per location, and put into markers array.
       var marker = new google.maps.Marker({
@@ -98,6 +106,7 @@ var ekaMap;
         content: building
       });
       marker.addListener('click', function() {
+        this.setIcon(bluePin);
         infowindow.open(marker.get('ekaMap'), marker);
       });
     }
@@ -126,7 +135,13 @@ var pinDrop=function(data) {
 	this.nicknames=ko.observableArray(data.nicknames);
 	this.hours=ko.observable(data.hours);
 	this.building=ko.observable(data.building);
-    	
+
+};
+
+var rattleNRoll=function(data) {
+  var self = this;
+  this.quakeTitle=ko.observable(data.quakeTitle);
+  this.quakePlace=ko.observable(data.quakePlace);
 };
 
 //how to calc distance.  From stack overflow
@@ -187,11 +202,12 @@ var earthquake=function() {
         getDistanceFromLatLon(latitude, longitude);
         //only select if within 50 mi & greater than 2.5 magnitude
         if (distance<=50 && feature.properties.mag>=2.5) {
-  				var quakeTitle=(feature.properties.mag);
+  				quakeTitle=(feature.properties.mag);
+          quakePlace=(feature.properties.title);
           //resets zoom to account for distance of equakes to eureka
-  				var quakePosition = {lat: latitude, lng: longitude};
+          var quakePosition = {lat: latitude, lng: longitude};
         			ekaMap.setZoom(9);
-        	//makes quake circle.  Size relative to magnitude of equake
+          //makes quake circle.  Size relative to magnitude of equake
   				var quakeMarker = new google.maps.Circle({
             strokeColor: '#FF0000',
       			strokeWeight: 2,
@@ -225,22 +241,53 @@ function mapError() {
 //viewModel inspired by KO tutorials and class lecture
 function ViewModel() {
 	var self = this;
-    self.folders = lovedOnes;
+  self.folders = lovedOnes;
 	self.careList=ko.observableArray([]);
 
-	lovedOnes.forEach(function(locationItem){
+	
+  lovedOnes.forEach(function(locationItem){
 		self.careList.push( new pinDrop(locationItem));
 	});
 	
+  //creates observable for each location in list
 	self.selectedOne=ko.observable( this.careList()[0]);
 
+  //refers to specific pin drop location
 	self.lovedOne=function(clickedOne) {
 		self.selectedOne(clickedOne);
 	};
-	//call earthquake function
+
+
+  self.shakerList=ko.observableArray([]);
+  self.folders=hotSpots[quakeTitle, quakePlace];
+
+  hotSpots.forEach(function(quakeSpot){
+    self.shakerList.push( new rattleNRoll(quakeSpot));
+  });
+  
+  self.shaker=ko.observable( this.shakerList()[0]);
+
+  self.rattled=function(shaken) {
+    self.shaker(shaken);
+  }
+
+
 	self.earthquakes = function() {
     earthquake();
-    }
+  };
+  //  self.shakerList.push(quakeTitle);
+  //self.shakerlist.push(quakePlace);
+  console.log(quakeTitle, "**");
+  console.log(shakerList, "##");
+  console.log(quakePlace);
+  console.log(hotSpots);
+    //console.dir(shakerList);
+    //console.dir(quakePlace);
+    
+
+
+  //self.shakerList.push(quakeTitle);
+
 };
 
 //apply bindings to ViewModel

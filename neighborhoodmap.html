@@ -9,7 +9,7 @@
    <style type="text/css"></style>
  </head>
  <body>
-  <div id="col-12">
+  <div class="col-12">
        <h3>Click on the name for the corresonding hours and image of the building</h3>
        <h2><ul id="col-4" data-bind="foreach: careList">
             <li data-bind="text: name, click: $parent.lovedOne"></li>
@@ -20,9 +20,15 @@
             <p data-bind="text: hours"></p>
         </div>
         <div id="col-4" data-bind="with:selectedOne">
-            <img src="" alt="google image of location described in name" data-bind="attr: {src: imgSrc}">
+            <img ="" alt="google image of location described in name" data-bind="attr: {src: imgSrc}">
         </div>
-
+  </div>
+  <div>
+    <h3>EarthQuakes:</h3>
+      <ul data-bind="foreach: shakerList()">
+        <li data-bind="text: quakeTitle"></li>
+      </ul>
+    
   </div>
    <h3>Select for Magnitude 2.5 or greater earthquakes over past 30 days within 50 mi radius</h3>
    <button data-bind="click: earthquakes">EarthQuake Update</button>
