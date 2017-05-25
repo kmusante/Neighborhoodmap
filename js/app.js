@@ -144,13 +144,13 @@ var pinDrop=function(data) {
 
 };
 
-var rattleNRoll=function(data) {
+/*var rattleNRoll=function() {
     var self = this;
     var latitude, longitude;
-    self.shakerList=ko.observableArray(data.shakerList);
-    self.latitude = ko.observable(data.latitude);
-    self.longitude = ko.observable(data.longitude);
-};
+    self.shakerList=ko.observableArray(shakerList);
+    self.latitude = ko.observable(latitude);
+    self.longitude = ko.observable(longitude);
+};*/
 
 //how to calc distance.  From stack overflow
 //needed so i could find equakes within specific distance of eureka
@@ -177,7 +177,7 @@ function deg2rad(deg) {
 var earthquake=function() {
   ///ensures USGS URL is valid
   if (typeof(earthquake)===undefined || typeof(earthquake)===null) {
-    console.log("errorr!!!");
+    console.log("error!!!");
     mapError();
     };
   //error handling in case URL for USGS not loading
@@ -212,7 +212,7 @@ var earthquake=function() {
         if (distance<=50 && feature.properties.mag>=2.5) {
   				quakeTitle=(feature.properties.mag);
           quakeCity=(feature.properties.title);
-          
+
           //resets zoom to account for distance of equakes to eureka
           var quakePosition = {lat: latitude, lng: longitude};
         	ekaMap.setZoom(9);
@@ -233,10 +233,12 @@ var earthquake=function() {
             quakePlace=[quakePosition.lat, quakePosition.lng];
             //arrange in an array and eliminate duplicates
             quakeLocations=arrayUnique(quakeLocations.concat(quakePlace));
-            console.log(quakeLocations.length);
-            //console.log(quakeLocations, "****");
+
+            loadArray(quakeLocations, latitude, longitude);
+
+
           };
-           
+                    
             //from stackoverflow to eliminate duplicates from json
             function arrayUnique(array) {
               var a = array.concat();
@@ -249,12 +251,31 @@ var earthquake=function() {
 
               return a;
               }
-         
-       
-          //event listener.  Will indicate quake magnitude 
+        function loadArray(quakeLocations, latitude, longitude){
+          var quake = {};
+          quake.marker = quakeMarker;
+          quake.title = quakeTitle;
+          quake.city = quakeCity;
+          quake.latitude=latitude;
+          quake.longitude=longitude;
+          // push quake in to hotSpots observable array
+          
+          quakeModel.hotSpots.push(quake);
+
+          for(i=0; i<=quakeModel.hotSpots.length; ++i){
+            for (j=0; j<=quakeModel.hotSpots.length; ++j){
+              if (quakeModel.hotSpots[i]===quakeModel.hotSpots[j]) {
+
+                quakeModel.hotSpots.splice(i, 1, quake);
+            };
+          };
+          };
+        };
+
+          //event listener.  Will indicate quake magnitude & location
   			function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
     			var quakeInfowindow = new google.maps.InfoWindow({
-      			content: quakeCity+" -Magnitude "+quakeTitle.toString(),
+      			content: quakeCity.toString(),
       			position: quakePosition
     			});quakeMarker.addListener('click', function() {
               quakeInfowindow.open(ekaMap, quakeMarker);
@@ -262,7 +283,9 @@ var earthquake=function() {
 	     	 }
 			 })
       });shakerList=quakeLocations;
-          console.log(shakerList);  
+         console.log(shakerList[0], "***");
+         console.log(quakeModel.hotSpots());
+        
     });
     };
 	//manages oneerror error
@@ -270,6 +293,7 @@ function mapError() {
   alert('The image could not be loaded.  For the love of God I hope it was not because of an earthquake');
     };  
 //viewModel inspired by KO tutorials and class lecture
+
 function ViewModel() {
 	var self = this;
   self.folders = lovedOnes;
@@ -288,15 +312,13 @@ function ViewModel() {
 		self.selectedOne(clickedOne);
 	};
 
+  self.hotSpots = ko.observableArray([]);
+
+  //rattleNRoll();
+
   self.earthquakes = function() {
     earthquake();
-    rattleNRoll();
-    self.hotSpots = ko.observableArray([
-      new latitude(self.shakerList[0]),
-      new longitude(self.shakerList[1])
-    ]);
-    console.log(hotSpots, "**&&");
-    console.log(shakerList, "##&&");
+    //console.log(this.hotSpots(), "%%%");
   };
  
 	/*self.earthquakes = function() {
@@ -363,5 +385,9 @@ function ViewModel() {
 };
 
 
+
+
+//ko.applyBindings(new ViewModel());
+var quakeModel = new  ViewModel();
 //apply bindings to ViewModel
-ko.applyBindings(new ViewModel());
+ko.applyBindings(quakeModel);
