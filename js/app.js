@@ -66,7 +66,7 @@ var ekaMap;
     // create map
     ekaMap=new google.maps.Map(document.getElementById('ekaMap'),{
    	center: {lat: 40.802222, lng: -124.1625},
-   	zoom: 12,
+   	zoom: 11,
     mapTypeControl: false
     });
     //create pin drops and names when hovered over
@@ -210,35 +210,47 @@ var earthquake=function() {
         getDistanceFromLatLon(latitude, longitude);
         //only select if within 50 mi & greater than 2.5 magnitude
         if (distance<=50 && feature.properties.mag>=2.5) {
-  				quakeTitle=(feature.properties.mag);
-          quakeCity=(feature.properties.title);
-
-          //resets zoom to account for distance of equakes to eureka
-          var quakePosition = {lat: latitude, lng: longitude};
-        	ekaMap.setZoom(9);
-          //makes quake circle.  Size relative to magnitude of equake
-  				var quakeMarker = new google.maps.Circle({
-            strokeColor: '#FF0000',
-      			strokeWeight: 2,
-      			fillColor: 'green',
-      			map: ekaMap,
-      			center: quakePosition,
-      			radius: quakeTitle*10000/7,
-            draggable: true,
-            animation: google.maps.Animation.DROP,
-      			strokeOpacity: 0.1
-            });attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
+  				var quakePosition = {lat: latitude, lng: longitude};
+          //location in longitude and latitude
+          quakePlace=[quakePosition.lat, quakePosition.lng];
+          console.log(quakePlace, "QP");
+          console.log(quakeLocations.length);
+          console.log(quakeLocations, "sb array of lat lng");
+          //for (i=0; i<=quakeLocations.length; i+2){
             
-            //location in longitude and latitude
-            quakePlace=[quakePosition.lat, quakePosition.lng];
-            //arrange in an array and eliminate duplicates
-            quakeLocations=arrayUnique(quakeLocations.concat(quakePlace));
+            if ((quakeLocations.length===0) ||  (quakePlace[0]!=quakeLocations[1] && quakePlace[1]!=quakeLocations[2] )) {
+              console.log("3");
+              console.log(quakePlace[0], quakeLocations[0], quakePlace[1], quakeLocations[1], "9999");
+              console.log(quakeLocations);
+              quakeTitle=(feature.properties.mag);
+              quakeCity=(feature.properties.title);
+              //arrange in an array and eliminate duplicates
+              quakeLocations=arrayUnique(quakeLocations.concat(quakePlace));
+              //resets zoom to account for distance of equakes to eureka
+              ekaMap.setZoom(9);
+              //makes quake circle.  Size relative to magnitude of equake
+              var quakeMarker = new google.maps.Circle({
+                strokeColor: '#FF0000',
+                strokeWeight: 5,
+                fillColor: 'green',
+                map: ekaMap,
+                center: quakePosition,
+                radius: quakeTitle*10000/7,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                strokeOpacity: 0.5
+                });attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
+                
+                
 
-            loadArray(quakeLocations, latitude, longitude);
+                loadArray(quakeMarker, latitude, longitude);
 
 
+              //};
+            };
           };
-                    
+       });
+    });
             //from stackoverflow to eliminate duplicates from json
             function arrayUnique(array) {
               var a = array.concat();
@@ -251,7 +263,7 @@ var earthquake=function() {
 
               return a;
               }
-        function loadArray(quakeLocations, latitude, longitude){
+        function loadArray(quakeMarker, latitude, longitude){
           var quake = {};
           quake.marker = quakeMarker;
           quake.title = quakeTitle;
@@ -259,18 +271,9 @@ var earthquake=function() {
           quake.latitude=latitude;
           quake.longitude=longitude;
           // push quake in to hotSpots observable array
-          
           quakeModel.hotSpots.push(quake);
-
-          for(i=0; i<=quakeModel.hotSpots.length; ++i){
-            for (j=0; j<=quakeModel.hotSpots.length; ++j){
-              if (quakeModel.hotSpots[i]===quakeModel.hotSpots[j]) {
-
-                quakeModel.hotSpots.splice(i, 1, quake);
-            };
-          };
-          };
-        };
+          console.log(quakeMarker, "&&&&&7777");
+       };
 
           //event listener.  Will indicate quake magnitude & location
   			function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
@@ -282,12 +285,8 @@ var earthquake=function() {
     				});
 	     	 }
 			 })
-      });shakerList=quakeLocations;
-         console.log(shakerList[0], "***");
-         console.log(quakeModel.hotSpots());
+      };//console.log(quakeModel.hotSpots(), "&&77");
         
-    });
-    };
 	//manages oneerror error
 function mapError() {
   alert('The image could not be loaded.  For the love of God I hope it was not because of an earthquake');
@@ -319,6 +318,11 @@ function ViewModel() {
   self.earthquakes = function() {
     earthquake();
     //console.log(this.hotSpots(), "%%%");
+  };
+
+
+  self.showInfo=function(quakeVar){
+    google.maps.event.trigger(quakeVar.marker,'click');
   };
  
 	/*self.earthquakes = function() {

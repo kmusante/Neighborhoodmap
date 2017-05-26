@@ -24,17 +24,17 @@
         </div>
   </div>
   <div>
-    <h3>EarthQuakes:</h3>
+    <h4>EarthQuakes:  *Source: https://earthquake.usgs.gov</h4>
       <ul data-bind="foreach: hotSpots">
-        <li data-bind="text: city, click: title"></li>
+        <li data-bind="text: city, click: $parent.showInfo"></li>
       </ul>
     
   </div>
-   <h3>Select for Magnitude 2.5 or greater earthquakes over past 30 days within 50 mi radius</h3>
-   <button data-bind="click: earthquakes">EarthQuake Update</button>
-   <p>Source: https://earthquake.usgs.gov</p>
+   <h3>Select for Magnitude 2.5 or greater earthquakes over past 30 days within 50 mi radius*</h3>
+   <button data-bind="click: earthquakes">Quake Update</button>
    <!-- Create map in HTML called ekaMap-->
-   <div id="ekaMap"></div>
+   <div id="ekaMap">
+   </div>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
      <script src="js/lib/knockout-3.2.0.js"></script>
      <script src="js/app.js"></script>
