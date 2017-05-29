@@ -65,23 +65,23 @@ var hotSpots;
 //needed so i could find equakes within specific distance of eureka
 function getDistanceFromLatLon(latitude, longitude) {
   var R = 3959; // Radius of the earth in miles
-  var dLat = deg2rad(latitude-40.802222);  // deg2rad below
-  var dLon = deg2rad(longitude-(-124.1625)); 
+  var dLat = deg2rad(latitude-40.802222);
+  var dLon = deg2rad(longitude-(-124.1625));
   var a = 
     Math.sin(dLat/2) * Math.sin(dLat/2) +
     Math.cos(deg2rad(40.802222)) * Math.cos(deg2rad(latitude)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2); 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   distance = R * c; // Distance in mi
   distance=distance.toFixed(2);
   return distance;
-};
+}
 
 //this is also from stack overflow&needed to activate
 //getDistanceFromLatLon function
 function deg2rad(deg) {
   return deg * (Math.PI/180)
-};
+}
 
 //this loads equake data into quakeModel.hotSpots to use in viewModel
 function loadArray(quakeMarker, latitude, longitude){
@@ -93,18 +93,19 @@ function loadArray(quakeMarker, latitude, longitude){
   quake.longitude=longitude;
   // push quake in to hotSpots observable array
   quakeModel.hotSpots.push(quake);
-};
+}
 
 //determines if quakePlace is a subset of quakeLocations
 //eliminates duplicate equakes based on long, lat.
 function isEqual(quakePlace, quakeLocations) {
   for(var j=0; j<=quakeLocations.length; ++j) {
-    if(quakePlace[0] === quakeLocations[j] && quakePlace[1]===quakeLocations[j+1]){
+    if(quakePlace[0] === quakeLocations[j] && 
+      quakePlace[1]===quakeLocations[j+1]){
       var checkEqual="0";
       };
     var checkEqual="1";
   };return checkEqual;
-};
+}
 
 //event listener.  Will indicate quake magnitude & location when clicked
 function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
@@ -123,8 +124,7 @@ function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
               });attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
       quakeInfowindow.open(ekaMap, quakeMarker);
     });
- };
-
+ }
 
 var ekaMap;
   // initialize the map
@@ -140,7 +140,7 @@ var ekaMap;
       {title: 'Ken&Marita', location: {lat: 40.763027, lng: -124.151345}},
       {title: 'Pat&Carmela', location: {lat: 40.79292, lng: -124.142186}},
       {title: 'Eureka Payments', location: {lat: 40.802028, lng: -124.161238}},
-      {title: 'Eureka High School', location: {lat: 40.790379, lng: -124.158875}},
+      {title: 'EKA High School', location: {lat: 40.790379, lng: -124.158875}},
       {title: 'Cutten School', location: {lat: 40.766483, lng: -124.143925}},
       {title: 'Eureka Police Dep', location: {lat: 40.800425, lng: -124.169326}}
     ];
@@ -154,7 +154,6 @@ var ekaMap;
       var highlightPin=makeMarkerIcon('FFFF30');
       //when pin is clicked it changes color
       var bluePin=makeMarkerIcon('0065ff');
-        
       // Create a marker per location, and put into markers array.
       var marker = new google.maps.Marker({
         map: ekaMap,
@@ -172,7 +171,7 @@ var ekaMap;
       marker.addListener('mouseout', function() {
         this.setIcon(defaultPin);
       });
-    	}
+    };
     //create function so info window may be opened at each Pin
     function attachInfoWindow(marker, building) {
       var infowindow = new google.maps.InfoWindow({
@@ -189,16 +188,16 @@ var ekaMap;
     //took this function from class
     function makeMarkerIcon(markerColor) {
       var markerImage = new google.maps.MarkerImage(
-        'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+        'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'
+        + markerColor +
         '|40|_|%E2%80%A2',
         new google.maps.Size(21, 34),
         new google.maps.Point(0, 0),
         new google.maps.Point(10, 34),
         new google.maps.Size(21,34));
       return markerImage;
+      };
     }
-    
-   }
  
 var pinDrop=function(data) {
 	this.name=ko.observable(data.name);
@@ -207,7 +206,6 @@ var pinDrop=function(data) {
 	this.nicknames=ko.observableArray(data.nicknames);
 	this.hours=ko.observable(data.hours);
 	this.building=ko.observable(data.building);
-
 };
 
 //inspired by stack overflow
@@ -243,13 +241,9 @@ var earthquake=function() {
           quakePlace=[quakePosition.lat, quakePosition.lng];
           //calls function to determine if we already have quakePlace Location
           isEqual(quakePlace, quakeLocations);
-          if ((checkEqual=undefined || checkEqual==0)&&(quakeLocations.length<7)){
-    			  console.log(checkEqual, "TF");
-            console.log(quakePlace, "QP");
-            console.log(quakePlace.length, "QP length");
-            console.log(quakeLocations.length, "QL length");
-            console.log(quakeLocations, "QL array of lat lng");
-          
+          if ((checkEqual=undefined || checkEqual==0)&&
+            (quakeLocations.length<6)){
+    			  //get magnitude and city description of quake          
             quakeTitle=(feature.properties.mag);
             quakeCity=(feature.properties.title);
             //arrange in an array and eliminate duplicates
@@ -269,7 +263,6 @@ var earthquake=function() {
               strokeOpacity: 1.0
               });attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
                 loadArray(quakeMarker, latitude, longitude);
-
           };
         };
      });
@@ -281,19 +274,19 @@ var earthquake=function() {
           for(var j=i+1; j<a.length; ++j) {
             if(a[i] === a[j])
               a.splice(j--, 1);
-            }
-          }
+            };
+          };
         return a;
-        }
-  })
-};
+        };
+  });
+}
         
 	//manages oneerror error
 function mapError() {
-  alert('The image could not be loaded.  For the love of God I hope it was not because of an earthquake');
-    };  
+  alert('The image could not be loaded. '+
+    'For the love of God I hope it was not because of an earthquake');
+    }  
 //viewModel inspired by KO tutorials and class lecture
-
 function ViewModel() {
 	var self = this;
   self.folders = lovedOnes;
@@ -327,7 +320,7 @@ function ViewModel() {
   self.showInfo=function(quakeVar){
     google.maps.event.trigger(quakeVar.marker,'click', {});
   };
- };
+ }
 
 var quakeModel = new  ViewModel();
 //apply bindings to ViewModel
