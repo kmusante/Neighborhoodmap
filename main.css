@@ -1,13 +1,14 @@
 body, html {
-  margin: 10;
-  padding: 10;
+  margin: 5px;
+  padding: 1px;
   width: 100%;
   height: 100%;
 }
 
 #ekaMap {
-  height: 100%;
+  height: 80%;
 }
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -31,6 +32,11 @@ main {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+}
+
+li {
+  font: bold;
+  font-size: 20px;
 }
 
 #col-1 {

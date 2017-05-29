@@ -11,9 +11,9 @@
  <body>
   <div class="col-12">
        <h3>Click on the name for the corresonding hours and image of the building</h3>
-       <h2><ul id="col-4" data-bind="foreach: careList">
+       <ul id="col-4" data-bind="foreach: careList">
             <li data-bind="text: name, click: $parent.lovedOne"></li>
-        </ul></h2>
+        </ul>
         <div id="col-4" data-bind="with:selectedOne">
             <h2 data-bind="text: nicknames"></h2>
             <h3>Days+Hours likely to be at location:</h3>
