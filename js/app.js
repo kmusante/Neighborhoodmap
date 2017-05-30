@@ -249,7 +249,7 @@ var earthquake = function() {
         //how to calc distance from eureka.  From stack overflow
         getDistanceFromLatLon(latitude, longitude);
         //only select if within 50 mi & greater than 2.5 magnitude
-        if (distance <= 50 && feature.properties.mag >= 2.5) {
+        if (distance <= 50/* && feature.properties.mag >= 2.5*/) {
           var quakePosition = {
             lat: latitude,
             lng: longitude
@@ -259,7 +259,7 @@ var earthquake = function() {
           //calls function to determine if we already have quakePlace Location
           isEqual(quakePlace, quakeLocations);
           if ((checkEqual = undefined || checkEqual == 0) &&
-            (quakeLocations.length < 6)) {
+            (quakeLocations.length < 10)) {
             //get magnitude and city description of quake          
             quakeTitle = (feature.properties.mag);
             quakeCity = (feature.properties.title);
