@@ -82,11 +82,14 @@ function loadArray(quakeMarker, latitude, longitude) {
   quake.city = quakeCity;
   quake.latitude = latitude;
   quake.longitude = longitude;
+  // added isVisible property to track visible state of marker
+  quake.isVisible = ko.observable(true);
   // push quake in to hotSpots observable array
   quakeModel.hotSpots.push(quake);
 }
 
-//determines if quakePlace is a subset of quakeLocations
+/*//determines if quakePlace is a subset of quakeLocations
+//commented out given checkDups funtion below. left here for future reference
 //eliminates duplicate equakes based on long, lat.
 function isEqual(quakePlace, quakeLocations) {
   for (var j = 0; j <= quakeLocations.length; ++j) {
@@ -97,8 +100,20 @@ function isEqual(quakePlace, quakeLocations) {
     var checkEqual = "1";
   }
   return;
-}
+}*/
 
+// function to check for duplicate quakes 
+//i couldnt figure this out without help from sara m in 1 on 1
+//I had above isEqual but this is way better
+function checkDups(quakeTitle, quakePlace) {
+  var duplicate = false;
+  quakeModel.hotSpots().forEach(function(quake) {
+    if (quake.title === quakeTitle && quakePlace[0] === quake.latitude && quakePlace[1] === quake.longitude) {
+      duplicate = true;
+    }
+  });
+  return duplicate;
+}
 //event listener.  Will indicate quake magnitude & location when clicked
 function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
   var quakeInfowindow = new google.maps.InfoWindow({
@@ -107,14 +122,18 @@ function attachQuakeWindow(quakeMarker, quakeTitle, quakePosition) {
   });
   quakeMarker.addListener('click', function() {
     var quakeMarker = new google.maps.Circle({
+      visible: false
+    });
+    var quakeMarker = new google.maps.Circle({
       strokeColor: 'blue',
       strokeWeight: 10,
       fillColor: 'blue',
       map: ekaMap,
       center: quakePosition,
-      radius: quakeTitle * 10000 / 7,
+      radius: quakeTitle * 10000 / 5,
       strokeOpacity: 2
     });
+    ekaMap.setZoom(9);
     attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
     quakeInfowindow.open(ekaMap, quakeMarker);
   });
@@ -128,7 +147,6 @@ function initMap() {
       lat: 40.802222,
       lng: -124.1625
     },
-    zoom: 11,
     mapTypeControl: false
   });
   //create pin drops and names when hovered over
@@ -204,6 +222,8 @@ function initMap() {
       content: building
     });
     marker.addListener('click', function() {
+      //zooms in when clicking at pinDrops
+      ekaMap.setZoom(11);
       this.setIcon(bluePin);
       infowindow.open(marker.get('ekaMap'), marker);
     });
@@ -235,36 +255,36 @@ var pinDrop = function(data) {
 };
 
 //inspired by stack overflow
-var earthquake = function() {
-  //go through each item on url
-  $.getJSON(equakeUrl, function(data) {
-    //go through each item in equakeURL
-    $.each(data, function(key, val) {
-      var features = data.features;
-      features.forEach(function(feature) {
-        //get longitude of equake
-        var longitude = feature.geometry.coordinates[0];
-        //get latitude of equake
-        var latitude = feature.geometry.coordinates[1];
-        //how to calc distance from eureka.  From stack overflow
-        getDistanceFromLatLon(latitude, longitude);
-        //only select if within 50 mi & greater than 2.5 magnitude
-        if (distance <= 50/* && feature.properties.mag >= 2.5*/) {
-          var quakePosition = {
-            lat: latitude,
-            lng: longitude
-          };
-          //location in longitude and latitude
-          quakePlace = [quakePosition.lat, quakePosition.lng];
-          //calls function to determine if we already have quakePlace Location
-          isEqual(quakePlace, quakeLocations);
-          if ((checkEqual = undefined || checkEqual == 0) &&
-            (quakeLocations.length < 10)) {
-            //get magnitude and city description of quake          
-            quakeTitle = (feature.properties.mag);
-            quakeCity = (feature.properties.title);
-            //arrange in an array and eliminate duplicates
-            quakeLocations = arrayUnique(quakeLocations.concat(quakePlace));
+var earthquake;
+//go through each item on url
+$.getJSON(equakeUrl, function(data) {
+  //go through each item in equakeURL
+  $.each(data, function(key, val) {
+    var features = data.features;
+    features.forEach(function(feature) {
+      //get longitude of equake
+      var longitude = feature.geometry.coordinates[0];
+      //get latitude of equake
+      var latitude = feature.geometry.coordinates[1];
+      //how to calc distance from eureka.  From stack overflow
+      getDistanceFromLatLon(latitude, longitude);
+      //only select if within 50 mi & greater than 2.0 magnitude
+      //might need to lower mag or increase distance to ensure i have 5 pts
+      if (distance <= 50 && feature.properties.mag >= 2.0) {
+        var quakePosition = {
+          lat: latitude,
+          lng: longitude
+        };
+        //location in longitude and latitude
+        quakePlace = [quakePosition.lat, quakePosition.lng];
+        //calls function to determine if we already have quakePlace Location
+        if (checkEqual = undefined || checkEqual == 0) {
+          //get magnitude and city description of quake          
+          quakeTitle = (feature.properties.mag);
+          quakeCity = (feature.properties.title);
+          //arrange in an array and eliminate duplicates
+          //determine if quakePlace is a duplicate location
+          if (!checkDups(quakeTitle, quakePlace)) {
             //resets zoom to account for distance of equakes to eureka
             ekaMap.setZoom(9);
             //makes quake circle.  Size relative to magnitude of equake
@@ -275,33 +295,22 @@ var earthquake = function() {
               map: ekaMap,
               center: quakePosition,
               radius: quakeTitle * 10000 / 7,
-              draggable: true,
-              animation: google.maps.Animation.DROP,
               strokeOpacity: 1.0
             });
             attachQuakeWindow(quakeMarker, quakeTitle, quakePosition);
             loadArray(quakeMarker, latitude, longitude);
           }
-        }
-      });
-    });
-    //from stackoverflow to eliminate duplicates from json
-    function arrayUnique(array) {
-      var a = array.concat();
-      for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
-          if (a[i] === a[j])
-            a.splice(j--, 1);
-        }
+        };
       }
-      return a;
-    }
-    //ensures USGS URL is valid
-    //error handling in case URL for USGS not loading
-  }).fail(function() {
-    mapError();
+    });
   });
-};
+
+  //ensures USGS URL is valid
+  //error handling in case URL for USGS not loading
+}).fail(function() {
+  mapError();
+});
+
 
 //manages oneerror error
 function mapError() {
@@ -313,6 +322,8 @@ function ViewModel() {
   var self = this;
   self.folders = lovedOnes;
   self.careList = ko.observableArray([]);
+  //had to move this variable up as hoisting doesnt work same in KO
+  self.hotSpots = ko.observableArray([]);
 
   //activates function and goes through list
   lovedOnes.forEach(function(locationItem) {
@@ -327,16 +338,34 @@ function ViewModel() {
     self.selectedOne(clickedOne);
   };
 
-  self.hotSpots = ko.observableArray([]);
+  self.largeQuakes = function() {
+    self.hotSpots().forEach(function(spot) {
+      if (spot.title < 2.50) {
+        spot.isVisible(false);
+        spot.marker.setVisible(false);
+        quakeMarker = new google.maps.Circle({
+          visible: false
+        });
+        ekaMap.setZoom(9);
+      } else {
+        spot.isVisible(true);
+        spot.marker.setVisible(true);
+      }
+    });
+    return;
 
-  self.earthquakes = function() {
-    if (quakeLocations.length === 0) {
-      earthquake();
-      return;
-    }
-    if (quakeLocations.length !== 0) {
-      return alert("earthquake data is updated");
-    }
+  };
+
+  self.earthQuakes = function() {
+    console.log("ya baby");
+    self.hotSpots().forEach(function(spot) {
+      spot.isVisible(true);
+      spot.marker.setVisible(true);
+      ekaMap.setZoom(9);
+    })
+    return;
+
+    //  return alert("earthquake data is updated");
   };
 
   self.showInfo = function(quakeVar) {

@@ -23,15 +23,22 @@
             <img ="" alt="google image of location described in name" data-bind="attr: {src: imgSrc}">
         </div>
   </div>
-  <div>
-    <h4>EarthQuakes:  *Source: https://earthquake.usgs.gov</h4>
+  <div id="col-12">
+    <h5>EarthQuakes within the past 30 days, above 2.0 in magnitude within 50 mi. of Eureka*</h5>
+    <h7>*Source: https://earthquake.usgs.gov</h7>
       <ul data-bind="foreach: hotSpots">
         <li data-bind="text: city, click: $parent.showInfo"></li>
       </ul>
-    
   </div>
-   <h3>Select for Magnitude 2.5 or greater earthquakes over past 30 days within 50 mi radius*</h3>
-   <button data-bind="click: earthquakes">Quake Update</button>
+  <div id="col-1">
+   <h4>Quakes above Magnitude 2.5</h4>
+   <button data-bind="click: largeQuakes">2.5 or Above</button>
+      <ul data-bind="foreach: hotSpots"></ul>
+  
+   <h4>Show all Quakes</h4>
+   <button data-bind="click: earthQuakes">All Quakes</button>
+      <ul data-bind="foreach: hotSpots"></ul>
+  </div> 
    <!-- Create map in HTML called ekaMap-->
    <div id="ekaMap">
    </div>
