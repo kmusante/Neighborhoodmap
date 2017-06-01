@@ -278,7 +278,7 @@ $.getJSON(equakeUrl, function(data) {
         //location in longitude and latitude
         quakePlace = [quakePosition.lat, quakePosition.lng];
         //calls function to determine if we already have quakePlace Location
-        if (checkEqual = undefined || checkEqual == 0) {
+        if (checkEqual == undefined || checkEqual == 0) {
           //get magnitude and city description of quake          
           quakeTitle = (feature.properties.mag);
           quakeCity = (feature.properties.title);
@@ -336,6 +336,7 @@ function ViewModel() {
   //refers to specific pin drop location
   self.lovedOne = function(clickedOne) {
     self.selectedOne(clickedOne);
+    attachInfoWindow(marker, self.building);
   };
 
   self.largeQuakes = function() {
@@ -363,8 +364,6 @@ function ViewModel() {
       ekaMap.setZoom(9);
     })
     return;
-
-    //  return alert("earthquake data is updated");
   };
 
   self.showInfo = function(quakeVar) {

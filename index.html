@@ -27,17 +27,15 @@
     <h5>EarthQuakes within the past 30 days, above 2.0 in magnitude within 50 mi. of Eureka*</h5>
     <h7>*Source: https://earthquake.usgs.gov</h7>
       <ul data-bind="foreach: hotSpots">
-        <li data-bind="text: city, click: $parent.showInfo"></li>
+        <li data-bind="text: city, click: $root.showInfo, visible: isVisible">
+        </li>
       </ul>
   </div>
   <div id="col-1">
    <h4>Quakes above Magnitude 2.5</h4>
    <button data-bind="click: largeQuakes">2.5 or Above</button>
-      <ul data-bind="foreach: hotSpots"></ul>
-  
    <h4>Show all Quakes</h4>
    <button data-bind="click: earthQuakes">All Quakes</button>
-      <ul data-bind="foreach: hotSpots"></ul>
   </div> 
    <!-- Create map in HTML called ekaMap-->
    <div id="ekaMap">
