@@ -357,7 +357,6 @@ function ViewModel() {
   };
 
   self.earthQuakes = function() {
-    console.log("ya baby");
     self.hotSpots().forEach(function(spot) {
       spot.isVisible(true);
       spot.marker.setVisible(true);
