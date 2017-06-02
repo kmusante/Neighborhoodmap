@@ -14,13 +14,14 @@
        <ul id="col-4" data-bind="foreach: careList">
             <li data-bind="text: name, click: $parent.lovedOne"></li>
         </ul>
+        
         <div id="col-4" data-bind="with:selectedOne">
             <h2 data-bind="text: nicknames"></h2>
             <h3>Days+Hours likely to be at location:</h3>
             <p data-bind="text: hours"></p>
         </div>
         <div id="col-4" data-bind="with:selectedOne">
-            <img ="" alt="google image of location described in name" data-bind="attr: {src: imgSrc}">
+            <img src ="" data-bind="attr: {src: imgSrc}">
         </div>
   </div>
   <div id="col-12">

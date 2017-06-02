@@ -51,6 +51,8 @@ var quakePlace = [];
 var quakeLocations = [];
 //var created for ko observable array
 var hotSpots;
+//var created for observable array for pinDrops
+var careList;
 
 //how to calc distance.  From stack overflow
 //needed so i could find equakes within specific distance of eureka
@@ -171,6 +173,7 @@ function initMap() {
       animation: google.maps.Animation.DROP,
       id: i
     });
+    lovedOnes[i].marker = marker;
     attachInfoWindow(marker, lovedOnes[marker.id].building);
     //higlights Pin when moused-over
     marker.addListener('mouseover', function() {
@@ -208,6 +211,10 @@ function initMap() {
       new google.maps.Size(21, 34));
     return markerImage;
   }
+  //activates function and goes through list
+  lovedOnes.forEach(function(locationItem) {
+    quakeModel.careList.push(new pinDrop(locationItem));
+  });
 }
 
 var pinDrop = function(data) {
@@ -288,14 +295,12 @@ function mapError() {
 function ViewModel() {
   var self = this;
   self.folders = lovedOnes;
+  //initial value to show first item in lovedOnes
+
   self.careList = ko.observableArray([]);
+
   //had to move this variable up as hoisting doesnt work same in KO
   self.hotSpots = ko.observableArray([]);
-
-  //activates function and goes through list
-  lovedOnes.forEach(function(locationItem) {
-    self.careList.push(new pinDrop(locationItem));
-  });
 
   //creates observable for each location in list
   self.selectedOne = ko.observable(this.careList()[0]);
@@ -303,6 +308,7 @@ function ViewModel() {
   //refers to specific pin drop location
   self.lovedOne = function(clickedOne) {
     self.selectedOne(clickedOne);
+    console.log(marker);
     google.maps.event.trigger(marker, 'click', {});
   };
 

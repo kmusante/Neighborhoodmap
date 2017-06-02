@@ -39,6 +39,10 @@ li {
   font-size: 20px;
 }
 
+img {
+  width: 400px;
+  height: 300px;
+}
 #col-1 {
   width: 8.33%;
   float: left;
