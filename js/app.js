@@ -4,38 +4,38 @@ var lovedOnes = [{
   imgSrc: "https://maps.googleapis.com/maps/api/streetview?size=400x300&location=65%20osprey%20ln,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
   nicknames: ["Home"],
   hours: "Mon-Tue: 5pm-8am Wed-Fri: 24X7 Sat-Sun: 24X7",
-  building: "Ken&Marita House<br/>Built: 2008<br/>Foundation Type: Perimeter<br/>Largest Quake: 6.5"
+  building: "Ken&Marita House<br/>Built: 2008<br/>Foundation Type: Perimeter<br/>Largest Quake: 6.5",
+  location: [40.763027, -124.151345]
 }, {
   name: "Pat&Carmela",
   imgSrc: "https://maps.googleapis.com/maps/api/streetview?size=400x300&location=2340%2017th%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
   nicknames: ["In-Laws"],
   hours: "Mon-Sun: 24X7",
-  building: "Pat&Carmela House<br/>Built: 1904<br/>Foundation Type: Pillar&Post<br/>Largest Quake: 7.3"
+  building: "Pat&Carmela House<br/>Built: 1904<br/>Foundation Type: Pillar&Post<br/>Largest Quake: 7.3",
+  location: [40.79292, -124.142186]
 }, {
   name: "Eureka Payments",
   imgSrc: "https://maps.googleapis.com/maps/api/streetview?size=400x300&location=515%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
   nicknames: ["Ken's Work"],
   hours: "Mon-Fri:  8am -5pm",
-  building: "Eureka Payments<br/>Built: 1987<br/>Foundation Type: Slab<br/>Largest Quake: 7.2"
+  building: "Eureka Payments<br/>Built: 1987<br/>Foundation Type: Slab<br/>Largest Quake: 7.2",
+  location: [40.802028,-124.161238]
 }, {
   name: "Eureka High School",
   imgSrc: "https://maps.googleapis.com/maps/api/streetview?size=400x300&location=1916%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
   nicknames: ["Elliott's School"],
   hours: "Mon-Fri: 8am-3pm",
-  building: "EHS<br/>Built: 1925<br/>Foundation Type: Perimeter<br/>Largest Quake: 7.2"
+  building: "EHS<br/>Built: 1925<br/>Foundation Type: Perimeter<br/>Largest Quake: 7.2",
+  location: [40.790379, -124.158875]
 }, {
   name: "Cutten School",
   imgSrc: "https://maps.googleapis.com/maps/api/streetview?size=400x300&location=4182%20walnut%20dr,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
   nicknames: ["Marita's Work"],
   hours: "Mon-Tue: 7:30am-4:00 pm",
-  building: "Cutten School<br/>Built: 1979<br/>Foundation Type: Portables<br/>Largest Quake: 7.2"
-}, {
-  name: "Eureka Police Dep",
-  imgSrc: "https://maps.googleapis.com/maps/api/streetview?size=400x300&location=604%20c%20st,eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
-  nicknames: ["Law Enforcement"],
-  hours: "N/A",
-  building: "Eureka Police Department<br/>Rally Point"
+  building: "Cutten School<br/>Built: 1979<br/>Foundation Type: Portables<br/>Largest Quake: 7.2",
+  location: [40.766483,-124.143925]
 }];
+
 var checkEqual;
 //json for all equakes for past 30 days
 var equakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
@@ -150,48 +150,13 @@ function initMap() {
     mapTypeControl: false
   });
   //create pin drops and names when hovered over
-  var locations = [{
-    title: 'Ken&Marita',
-    location: {
-      lat: 40.763027,
-      lng: -124.151345
-    }
-  }, {
-    title: 'Pat&Carmela',
-    location: {
-      lat: 40.79292,
-      lng: -124.142186
-    }
-  }, {
-    title: 'Eureka Payments',
-    location: {
-      lat: 40.802028,
-      lng: -124.161238
-    }
-  }, {
-    title: 'EKA High School',
-    location: {
-      lat: 40.790379,
-      lng: -124.158875
-    }
-  }, {
-    title: 'Cutten School',
-    location: {
-      lat: 40.766483,
-      lng: -124.143925
-    }
-  }, {
-    title: 'Eureka Police Dep',
-    location: {
-      lat: 40.800425,
-      lng: -124.169326
-    }
-  }];
-
-  for (var i = 0; i < locations.length; i++) {
+  for (var i = 0; i < lovedOnes.length; i++) {
     // Get the position from the location array.
-    var position = locations[i].location;
-    var title = locations[i].title;
+    var position =  {
+          lat: lovedOnes[i].location[0],
+          lng: lovedOnes[i].location[1]
+        };
+    var title = lovedOnes[i].name;
     //default pin color is red.  Mouse over color is yellow
     var defaultPin = makeMarkerIcon('FF0065');
     var highlightPin = makeMarkerIcon('FFFF30');
@@ -252,6 +217,8 @@ var pinDrop = function(data) {
   this.nicknames = ko.observableArray(data.nicknames);
   this.hours = ko.observable(data.hours);
   this.building = ko.observable(data.building);
+  this.marker=ko.observable(data.marker);
+  this.location=ko.observableArray(data.location);
 };
 
 //inspired by stack overflow
@@ -336,7 +303,7 @@ function ViewModel() {
   //refers to specific pin drop location
   self.lovedOne = function(clickedOne) {
     self.selectedOne(clickedOne);
-    attachInfoWindow(marker, self.building);
+    google.maps.event.trigger(marker, 'click', {});
   };
 
   self.largeQuakes = function() {
