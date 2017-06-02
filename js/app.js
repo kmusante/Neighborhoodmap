@@ -19,7 +19,7 @@ var lovedOnes = [{
   nicknames: ["Ken's Work"],
   hours: "Mon-Fri:  8am -5pm",
   building: "Eureka Payments<br/>Built: 1987<br/>Foundation Type: Slab<br/>Largest Quake: 7.2",
-  location: [40.802028,-124.161238]
+  location: [40.802028, -124.161238]
 }, {
   name: "Eureka High School",
   imgSrc: "https://maps.googleapis.com/maps/api/streetview?size=400x300&location=1916%20j%20st,%20eureka,%20ca&key=AIzaSyCfdGqmImcOQibTI0v9_rBmj91RV4cI8SE",
@@ -33,7 +33,7 @@ var lovedOnes = [{
   nicknames: ["Marita's Work"],
   hours: "Mon-Tue: 7:30am-4:00 pm",
   building: "Cutten School<br/>Built: 1979<br/>Foundation Type: Portables<br/>Largest Quake: 7.2",
-  location: [40.766483,-124.143925]
+  location: [40.766483, -124.143925]
 }];
 
 var checkEqual;
@@ -51,8 +51,6 @@ var quakePlace = [];
 var quakeLocations = [];
 //var created for ko observable array
 var hotSpots;
-//var created for observable array for pinDrops
-var careList;
 
 //how to calc distance.  From stack overflow
 //needed so i could find equakes within specific distance of eureka
@@ -154,10 +152,10 @@ function initMap() {
   //create pin drops and names when hovered over
   for (var i = 0; i < lovedOnes.length; i++) {
     // Get the position from the location array.
-    var position =  {
-          lat: lovedOnes[i].location[0],
-          lng: lovedOnes[i].location[1]
-        };
+    var position = {
+      lat: lovedOnes[i].location[0],
+      lng: lovedOnes[i].location[1]
+    };
     var title = lovedOnes[i].name;
     //default pin color is red.  Mouse over color is yellow
     var defaultPin = makeMarkerIcon('FF0065');
@@ -215,6 +213,7 @@ function initMap() {
   lovedOnes.forEach(function(locationItem) {
     quakeModel.careList.push(new pinDrop(locationItem));
   });
+  
 }
 
 var pinDrop = function(data) {
@@ -224,8 +223,8 @@ var pinDrop = function(data) {
   this.nicknames = ko.observableArray(data.nicknames);
   this.hours = ko.observable(data.hours);
   this.building = ko.observable(data.building);
-  this.marker=ko.observable(data.marker);
-  this.location=ko.observableArray(data.location);
+  this.marker = ko.observable(data.marker);
+  this.location = ko.observableArray(data.location);
 };
 
 //inspired by stack overflow
@@ -298,18 +297,20 @@ function ViewModel() {
   //initial value to show first item in lovedOnes
 
   self.careList = ko.observableArray([]);
-
+  self.selectedOne = ko.observable();
   //had to move this variable up as hoisting doesnt work same in KO
   self.hotSpots = ko.observableArray([]);
 
-  //creates observable for each location in list
-  self.selectedOne = ko.observable(this.careList()[0]);
+  //creates observable for each location in list and calc initial observable
+  self.setSelectedOneToFirstCareItem = ko.computed(function() {
+    return self.selectedOne(self.careList()[0]);;
+  });self.selectedOne(self.careList()[0]);
+  
 
   //refers to specific pin drop location
   self.lovedOne = function(clickedOne) {
     self.selectedOne(clickedOne);
-    console.log(marker);
-    google.maps.event.trigger(marker, 'click', {});
+    google.maps.event.trigger(clickedOne.marker(), 'click', {});
   };
 
   self.largeQuakes = function() {
